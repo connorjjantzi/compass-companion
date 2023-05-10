@@ -37,12 +37,12 @@ export async function setUserCookie(res: NextResponse, userId: string) {
     .setProtectedHeader({ alg: "HS256" })
     .setJti(nanoid())
     .setIssuedAt()
-    .setExpirationTime("1m")
+    .setExpirationTime("2h")
     .sign(new TextEncoder().encode(getJwtSecretKey()));
 
   res.cookies.set(USER_TOKEN, token, {
     httpOnly: true,
-    maxAge: 60, // 2 hours in seconds
+    maxAge: 60 * 60 * 2, // 2 hours in seconds
     path: "/",
     secure: process.env.NODE_ENV === "production",
   });

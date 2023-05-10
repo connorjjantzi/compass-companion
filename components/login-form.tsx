@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -16,43 +17,42 @@ export default function LoginForm() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
-    if (res.ok) {
-      // redirect to /compass
-      router.push("/compass");
-    } else if (res.status === 401) {
-      alert("Incorrect password.");
-    } else if (res.status === 404) {
-      alert("User not found.");
+    if (!res.ok) {
+      setError(await res.text());
+      return;
     } else {
-      alert("Something went wrong.");
+      router.push("/compass");
     }
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3">
-      <label htmlFor="username">
-        Username:
+    <>
+      <form onSubmit={onSubmit}>
         <input
-          className="ml-2 rounded-md text-black"
+          className="block w-full px-4 py-2 mb-4 border border-gray-300 rounded text-black"
           type="text"
           name="username"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-      </label>
-      <label htmlFor="password">
-        Password:
         <input
-          className="ml-2 rounded-md text-black"
+          className="block w-full px-4 py-2 mb-4 border border-gray-300 rounded text-black"
           type="password"
           name="password"
           placeholder="Password"
           value={password}
+          autoComplete="current-password"
           onChange={(e) => setPassword(e.target.value)}
         />
-      </label>
-      <button type="submit" value="Submit" />
-    </form>
+        <button
+          className="w-full px-4 py-2 text-white bg-blue-500 rounded"
+          type="submit"
+        >
+          Login
+        </button>
+      </form>
+      {error && <p className="text-red-500 mt-2 absolute">{error}</p>}
+    </>
   );
 }

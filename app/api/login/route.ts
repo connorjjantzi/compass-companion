@@ -2,9 +2,17 @@ import prisma from "@/lib/prisma";
 // import { compare } from "bcrypt";
 import { NextResponse } from "next/server";
 import { setUserCookie } from "@/lib/auth";
+import * as z from "zod";
+
+const userSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+});
 
 export async function POST(req: Request) {
-  const { username, password } = await req.json();
+  const json = await req.json();
+  const { username, password } = userSchema.parse(json);
+
   if (!username || !password) {
     return new NextResponse("Missing username or password", { status: 400 });
   }
@@ -22,14 +30,14 @@ export async function POST(req: Request) {
   });
 
   if (!user) {
-    return new NextResponse("User not found", { status: 404 });
+    return new NextResponse("Incorrect username or password", { status: 401 });
   }
 
   // const passwordMatch = await compare(password, user.password);
   const passwordMatch = password === user.password;
 
   if (!passwordMatch) {
-    return new NextResponse("Invalid password", { status: 401 });
+    return new NextResponse("Incorrect username or password", { status: 401 });
   }
 
   return setUserCookie(new NextResponse("Logged in"), user.id);
