@@ -2,7 +2,7 @@ export default function converStashIcons(name: string) {
   //links to stash tab images
   const images: { [key: string]: string } = {
     MapStash:
-      "https://web.poecdn.com/protected/image/layout/stash/currency-tab-icon.png?v=1680235310710&key=c4JmwvlEdlm1iitgRJ-LtQ",
+      "https://web.poecdn.com/protected/image/layout/stash/map-tab-icon.png?v=1682897767706&key=jLp8L5BgKpzzyf8Jdu51Zg",
     QuadStash:
       "https://web.poecdn.com/protected/image/layout/stash/quad-tab-icon.png?v=1680235310966&key=SO7Jf8d6g68rhHKJVt1Itw",
     PremiumStash:

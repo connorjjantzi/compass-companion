@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import convertCompassNames from "@/lib/convertCompassNames";
-import converStashIcons from "@/lib/convertStashIcons";
+import convertCompassNames from "@/lib/convert-compass-names";
+import converStashIcons from "@/lib/convert-stash-icons";
 
 interface Compass {
   name: string;
@@ -20,11 +20,15 @@ interface StashTab {
   };
 }
 
-interface StashTabItems extends StashTab {
-  items: {
-    typeLine: string;
-    enchantMods?: string[];
-  };
+interface StashTabItems {
+  typeLine: string;
+  enchantMods?: string[];
+  name: string;
+  stackSize?: number;
+}
+
+interface CompassList {
+  [key: string]: number;
 }
 
 export default function Compass() {
@@ -32,6 +36,7 @@ export default function Compass() {
   const [chaosValue, setChaosValue] = useState(0);
   const [stashTabs, setStashTabs] = useState<StashTab[] | null>(null);
   const [selectedStashTabs, setSelectedStashTabs] = useState<StashTab[]>([]);
+  const [compassList, setCompassList] = useState<CompassList>({});
 
   function updateChaosValue(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -100,7 +105,9 @@ export default function Compass() {
   }
 
   async function fetchStashItems() {
-    selectedStashTabs.forEach(async (stashTab) => {
+    if (!selectedStashTabs) return;
+    const stashItems: StashTabItems[] = [];
+    const promises = selectedStashTabs.map(async (stashTab) => {
       const res = await fetch("/api/stashItems", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -112,14 +119,38 @@ export default function Compass() {
         return;
       }
       const data = await res.json();
-      return data;
+      stashItems.push(...data);
+      stashItems.forEach((stashItem) => {
+        if (stashItem.enchantMods) {
+          stashItem.name = convertCompassNames(stashItem.enchantMods);
+        } else {
+          stashItem.name = stashItem.typeLine;
+        }
+      });
     });
+    await Promise.all(promises);
+
+    const counts: CompassList = stashItems.reduce((acc, curr) => {
+      const key = curr.name;
+
+      if (!acc[key]) {
+        acc[key] = 1;
+      } else {
+        acc[key]++;
+      }
+
+      return acc;
+    }, {} as CompassList);
+
+    setCompassList(counts);
   }
 
   if (!compasses) {
     return <div>Loading prices...</div>;
   } else if (!stashTabs) {
     return <div>Loading tabs...</div>;
+  } else if (!compassList) {
+    return <div>Loading items...</div>;
   } else {
     return (
       <div>
@@ -196,6 +227,18 @@ export default function Compass() {
             >
               Fetch Tabs
             </button>
+          )}
+        </div>
+        <div>
+          {compassList && (
+            <div>
+              {Object.entries(compassList).map(([key, value]) => (
+                <div key={key} className="flex gap-2 text-white">
+                  <p>Name: {key}</p>
+                  <p>Count: {value}</p>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>
