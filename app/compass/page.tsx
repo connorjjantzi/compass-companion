@@ -28,7 +28,11 @@ interface StashTabItems {
 }
 
 interface CompassList {
-  [key: string]: number;
+  [key: string]: {
+    quantity: number;
+    totalValue: number;
+    price: number;
+  };
 }
 
 export default function Compass() {
@@ -40,12 +44,17 @@ export default function Compass() {
 
   function updateChaosValue(
     e: React.ChangeEvent<HTMLInputElement>,
-    index: number
+    name: string
   ) {
+    const newCompassList = { ...compassList };
+    newCompassList[name].price = Number(e.target.value);
     if (!compasses) return;
-    const newCompasses = [...compasses];
-    newCompasses[index].chaos = Number(e.target.value);
-    setCompasses(newCompasses);
+    Object.keys(newCompassList).forEach((key) => {
+      newCompassList[key].totalValue =
+        newCompassList[key].quantity * newCompassList[key].price;
+    });
+
+    setCompassList(newCompassList);
   }
 
   useEffect(() => {
@@ -134,13 +143,21 @@ export default function Compass() {
       const key = curr.name;
 
       if (!acc[key]) {
-        acc[key] = 1;
+        acc[key] = { quantity: 1, totalValue: 0, price: 0 };
       } else {
-        acc[key]++;
+        acc[key].quantity++;
       }
 
       return acc;
     }, {} as CompassList);
+
+    if (!compasses) return;
+    Object.keys(counts).forEach((key) => {
+      const compass = compasses.find((compass) => compass.name === key);
+      if (!compass) return;
+      counts[key].price = compass.chaos;
+      counts[key].totalValue = counts[key].quantity * compass.chaos;
+    });
 
     setCompassList(counts);
   }
@@ -154,28 +171,6 @@ export default function Compass() {
   } else {
     return (
       <div>
-        <div>
-          {compasses.map((compass, index) => (
-            <div
-              className="flex flex-col items-center justify-between w-screen"
-              key={index}
-            >
-              <div className="flex gap-2 items-center w-screen">
-                <p>Name: {compass.name}</p>
-                <label>
-                  Chaos Value:
-                  <input
-                    key={index}
-                    type="number"
-                    value={compass.chaos}
-                    className="w-20 py-1 px-2 text-white border-x-2 rounded-full bg-black ml-2"
-                    onChange={(e) => updateChaosValue(e, index)}
-                  />
-                </label>
-              </div>
-            </div>
-          ))}
-        </div>
         <div>
           {stashTabs.map((stashTab, index) => (
             <div
@@ -234,8 +229,15 @@ export default function Compass() {
             <div>
               {Object.entries(compassList).map(([key, value]) => (
                 <div key={key} className="flex gap-2 text-white">
-                  <p>Name: {key}</p>
-                  <p>Count: {value}</p>
+                  <p>
+                    {key}: {value.quantity} Total Value: {value.totalValue}
+                  </p>
+                  <input
+                    type="number"
+                    value={value.price}
+                    className="w-20 py-1 px-2 text-white border-x-2 rounded-full bg-black ml-2"
+                    onChange={(e) => updateChaosValue(e, key)}
+                  />
                 </div>
               ))}
             </div>
