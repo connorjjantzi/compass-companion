@@ -36,12 +36,67 @@ interface CompassList {
   };
 }
 
+type SortField = "key" | "quantity" | "price" | "totalValue";
+type SortDirection = "asc" | "desc";
+
 export default function Compass() {
   const [compasses, setCompasses] = useState<Compass[] | null>(null);
-  const [chaosValue, setChaosValue] = useState(0);
   const [stashTabs, setStashTabs] = useState<StashTab[] | null>(null);
   const [selectedStashTabs, setSelectedStashTabs] = useState<StashTab[]>([]);
   const [compassList, setCompassList] = useState<CompassList>({});
+  const [sortField, setSortField] = useState<SortField>("key");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [previousSortField, setPreviousSortField] = useState<SortField>("key");
+
+  function sortCompassList(field: SortField) {
+    if (previousSortField === field) {
+      console.log(sortDirection === "asc" ? "desc" : "asc");
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortDirection("desc");
+    }
+    const sortedCompassList = Object.entries(compassList).sort(
+      ([aKey, aValue], [bKey, bValue]) => {
+        let a: string | number | undefined;
+        let b: string | number | undefined;
+
+        if (field === "key") {
+          a = aKey;
+          b = bKey;
+        } else {
+          a = aValue[field];
+          b = bValue[field];
+        }
+
+        if (field === "price" && compasses) {
+          if (a === undefined) {
+            a = compasses.find((compass) => compass.name === aKey)!.chaos;
+          }
+          if (b === undefined) {
+            b = compasses.find((compass) => compass.name === bKey)!.chaos;
+          }
+        } else if (field === "quantity") {
+          if (a === undefined) {
+            a = aValue.placeHolderQuantity;
+          }
+          if (b === undefined) {
+            b = bValue.placeHolderQuantity;
+          }
+        }
+
+        if (a! < b!) {
+          return sortDirection === "asc" ? -1 : 1;
+        } else if (a! > b!) {
+          return sortDirection === "asc" ? 1 : -1;
+        } else {
+          return 0;
+        }
+      }
+    );
+    setPreviousSortField(field);
+    setSortField(field);
+    setCompassList(Object.fromEntries(sortedCompassList));
+  }
 
   function updateChaosValue(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -288,41 +343,86 @@ export default function Compass() {
         </div>
         <div>
           {Object.keys(compassList).length > 0 && (
-            <table className="w-full table-fixed text-center">
-              <tr className="text-rose-700 text-xl">
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total Value</th>
-              </tr>
-              {Object.entries(compassList).map(([key, value]) => (
-                <tr key={key} className="text-purple-400 font-bold">
-                  <td>{key}</td>
-                  <td>
-                    <input
-                      type="number"
-                      value={value.quantity}
-                      placeholder={value.placeHolderQuantity.toString()}
-                      className="w-24 py-1 pl-4 border-blue-900 text-center border-x-4 rounded-full bg-black"
-                      onChange={(e) => updateQuantity(e, key)}
-                      min="0"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={value.price}
-                      placeholder={compasses
-                        .find((compass) => compass.name === key)
-                        ?.chaos.toString()}
-                      className="w-24 py-1 pl-4 border-blue-900 text-center border-x-4 rounded-full bg-black"
-                      onChange={(e) => updateChaosValue(e, key)}
-                      min="0"
-                    />
-                  </td>
-                  <td>{value.totalValue}</td>
+            <table className="w-full table-fixed text-center select-none">
+              <thead>
+                <tr className="text-rose-700 text-xl">
+                  <th
+                    className="cursor-pointer"
+                    onClick={() => sortCompassList("key")}
+                  >
+                    Item{" "}
+                    {sortField === "key"
+                      ? sortDirection === "asc"
+                        ? "↑"
+                        : "↓"
+                      : ""}
+                  </th>
+                  <th
+                    className="cursor-pointer"
+                    onClick={() => sortCompassList("quantity")}
+                  >
+                    Quantity{" "}
+                    {sortField === "quantity"
+                      ? sortDirection === "asc"
+                        ? "↑"
+                        : "↓"
+                      : ""}
+                  </th>
+                  <th
+                    className="cursor-pointer"
+                    onClick={() => sortCompassList("price")}
+                  >
+                    Price{" "}
+                    {sortField === "price"
+                      ? sortDirection === "asc"
+                        ? "↑"
+                        : "↓"
+                      : ""}
+                  </th>
+                  <th
+                    className="cursor-pointer"
+                    onClick={() => sortCompassList("totalValue")}
+                  >
+                    Total Value{" "}
+                    {sortField === "totalValue"
+                      ? sortDirection === "asc"
+                        ? "↑"
+                        : "↓"
+                      : ""}
+                  </th>
                 </tr>
-              ))}
+              </thead>
+              <tbody>
+                {/* {sortCompassList(sortField).map(([key, value]) => ( */}
+                {Object.entries(compassList).map(([key, value]) => (
+                  <tr key={key} className="text-purple-400 font-bold">
+                    <td>{key}</td>
+                    <td>
+                      <input
+                        type="number"
+                        value={value.quantity}
+                        placeholder={value.placeHolderQuantity.toString()}
+                        className="w-24 py-1 pl-4 border-blue-900 text-center border-x-4 rounded-full bg-black"
+                        onChange={(e) => updateQuantity(e, key)}
+                        min="0"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={value.price}
+                        placeholder={compasses
+                          .find((compass) => compass.name === key)
+                          ?.chaos.toString()}
+                        className="w-24 py-1 pl-4 border-blue-900 text-center border-x-4 rounded-full bg-black"
+                        onChange={(e) => updateChaosValue(e, key)}
+                        min="0"
+                      />
+                    </td>
+                    <td>{value.totalValue}</td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           )}
         </div>
