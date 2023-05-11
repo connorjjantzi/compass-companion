@@ -29,9 +29,10 @@ interface StashTabItems {
 
 interface CompassList {
   [key: string]: {
-    quantity: number;
+    quantity?: number;
     totalValue: number;
-    price: number;
+    price?: number;
+    placeHolderQuantity: number;
   };
 }
 
@@ -46,15 +47,31 @@ export default function Compass() {
     e: React.ChangeEvent<HTMLInputElement>,
     name: string
   ) {
-    const newCompassList = { ...compassList };
-    newCompassList[name].price = Number(e.target.value);
-    if (!compasses) return;
-    Object.keys(newCompassList).forEach((key) => {
-      newCompassList[key].totalValue =
-        newCompassList[key].quantity * newCompassList[key].price;
-    });
+    const compass = compassList[name];
+    if (e.target.value === "") {
+      compass.price = undefined;
+      if (!compasses) return;
+      if (compass.quantity) {
+        compass.totalValue =
+          compass.quantity *
+          compasses.find((compass) => compass.name === name)!.chaos;
+      } else {
+        compass.totalValue =
+          compass.placeHolderQuantity *
+          compasses.find((compass) => compass.name === name)!.chaos;
+      }
+      setCompassList({ ...compassList });
+      return;
+    }
+    compass.price = Number(e.target.value);
 
-    setCompassList(newCompassList);
+    if (compass.quantity) {
+      compass.totalValue = compass.quantity * compass.price;
+    } else {
+      compass.totalValue = compass.placeHolderQuantity * compass.price;
+    }
+
+    setCompassList({ ...compassList });
   }
 
   useEffect(() => {
@@ -143,9 +160,14 @@ export default function Compass() {
       const key = curr.name;
 
       if (!acc[key]) {
-        acc[key] = { quantity: 1, totalValue: 0, price: 0 };
+        acc[key] = {
+          quantity: 1,
+          totalValue: 0,
+          price: 0,
+          placeHolderQuantity: 0,
+        };
       } else {
-        acc[key].quantity++;
+        acc[key].quantity!++;
       }
 
       return acc;
@@ -156,10 +178,50 @@ export default function Compass() {
       const compass = compasses.find((compass) => compass.name === key);
       if (!compass) return;
       counts[key].price = compass.chaos;
-      counts[key].totalValue = counts[key].quantity * compass.chaos;
+      counts[key].totalValue = counts[key].quantity! * compass.chaos;
+      counts[key].placeHolderQuantity = counts[key].quantity!;
     });
 
     setCompassList(counts);
+  }
+
+  function updateQuantity(
+    e: React.ChangeEvent<HTMLInputElement>,
+    name: string
+  ) {
+    const compass = compassList[name];
+    if (e.target.value === "") {
+      compass.quantity = undefined;
+      if (!compass.price) {
+        if (compasses) {
+          compass.totalValue =
+            compass.placeHolderQuantity *
+            compasses.find((compass) => compass.name === name)!.chaos;
+        }
+      } else if (compass.price) {
+        compass.totalValue = compass.placeHolderQuantity * compass.price;
+      } else {
+        compass.totalValue = 0;
+      }
+      setCompassList({ ...compassList });
+      return;
+    }
+
+    compass.quantity = Number(e.target.value);
+
+    if (!compass.price) {
+      if (compasses) {
+        compass.totalValue =
+          compass.quantity *
+          compasses.find((compass) => compass.name === name)!.chaos;
+      }
+    } else if (compass.price) {
+      compass.totalValue = compass.quantity * compass.price;
+    } else {
+      compass.totalValue = 0;
+    }
+
+    setCompassList({ ...compassList });
   }
 
   if (!compasses) {
@@ -225,22 +287,43 @@ export default function Compass() {
           )}
         </div>
         <div>
-          {compassList && (
-            <div>
+          {Object.keys(compassList).length > 0 && (
+            <table className="w-full table-fixed text-center">
+              <tr className="text-rose-700 text-xl">
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total Value</th>
+              </tr>
               {Object.entries(compassList).map(([key, value]) => (
-                <div key={key} className="flex gap-2 text-white">
-                  <p>
-                    {key}: {value.quantity} Total Value: {value.totalValue}
-                  </p>
-                  <input
-                    type="number"
-                    value={value.price}
-                    className="w-20 py-1 px-2 text-white border-x-2 rounded-full bg-black ml-2"
-                    onChange={(e) => updateChaosValue(e, key)}
-                  />
-                </div>
+                <tr key={key} className="text-purple-400 font-bold">
+                  <td>{key}</td>
+                  <td>
+                    <input
+                      type="number"
+                      value={value.quantity}
+                      placeholder={value.placeHolderQuantity.toString()}
+                      className="w-24 py-1 pl-4 border-blue-900 text-center border-x-4 rounded-full bg-black"
+                      onChange={(e) => updateQuantity(e, key)}
+                      min="0"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      value={value.price}
+                      placeholder={compasses
+                        .find((compass) => compass.name === key)
+                        ?.chaos.toString()}
+                      className="w-24 py-1 pl-4 border-blue-900 text-center border-x-4 rounded-full bg-black"
+                      onChange={(e) => updateChaosValue(e, key)}
+                      min="0"
+                    />
+                  </td>
+                  <td>{value.totalValue}</td>
+                </tr>
               ))}
-            </div>
+            </table>
           )}
         </div>
       </div>
