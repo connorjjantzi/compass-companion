@@ -35,6 +35,7 @@ export default function LoginForm() {
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          autoComplete="username"
         />
         <input
           className="block w-full px-4 py-2 mb-4 border border-gray-300 rounded text-black"

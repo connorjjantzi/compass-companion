@@ -9,6 +9,7 @@ export default function Home() {
           <Link
             href="/login"
             className="text-white font-bold text-6xl bg-blue-500 rounded px-4 py-2"
+            as={`/login`}
           >
             Login
           </Link>

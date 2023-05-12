@@ -4,7 +4,7 @@ import Image from "next/image";
 import convertCompassNames from "@/lib/convert-compass-names";
 import converStashIcons from "@/lib/convert-stash-icons";
 
-interface Compass {
+interface CompassPrice {
   name: string;
   divine: number;
   chaos: number;
@@ -20,131 +20,86 @@ interface StashTab {
   };
 }
 
-interface StashTabItems {
+interface StashTabItem {
   typeLine: string;
-  enchantMods?: string[];
+  enchantMods: string[];
   name: string;
-  stackSize?: number;
 }
 
-interface CompassList {
-  [key: string]: {
-    quantity?: number;
-    totalValue: number;
-    price?: number;
-    placeHolderQuantity: number;
-  };
+interface Compass {
+  name: string;
+  quantity: number;
+  userQuantity?: number;
+  value: number;
+  userValue?: number;
+  totalValue: number;
 }
 
-type SortField = "key" | "quantity" | "price" | "totalValue";
+type SortField = "name" | "quantity" | "value" | "totalValue";
 type SortDirection = "asc" | "desc";
 
 export default function Compass() {
-  const [compasses, setCompasses] = useState<Compass[] | null>(null);
   const [stashTabs, setStashTabs] = useState<StashTab[] | null>(null);
   const [selectedStashTabs, setSelectedStashTabs] = useState<StashTab[]>([]);
-  const [compassList, setCompassList] = useState<CompassList>({});
-  const [sortField, setSortField] = useState<SortField>("key");
+  const [compassList, setCompassList] = useState<Compass[]>([]);
+  const [sortField, setSortField] = useState<SortField>("name");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
-  const [previousSortField, setPreviousSortField] = useState<SortField>("key");
+  const [previousSortField, setPreviousSortField] = useState<SortField>("name");
 
   function sortCompassList(field: SortField) {
-    if (previousSortField === field) {
-      console.log(sortDirection === "asc" ? "desc" : "asc");
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    let newSortDirection = sortDirection;
+    if (field === previousSortField) {
+      newSortDirection = newSortDirection === "asc" ? "desc" : "asc";
     } else {
-      setSortDirection("desc");
+      newSortDirection = "desc";
     }
-    const sortedCompassList = Object.entries(compassList).sort(
-      ([aKey, aValue], [bKey, bValue]) => {
-        let a: string | number | undefined;
-        let b: string | number | undefined;
-
-        if (field === "key") {
-          a = aKey;
-          b = bKey;
-        } else {
-          a = aValue[field];
-          b = bValue[field];
-        }
-
-        if (field === "price" && compasses) {
-          if (a === undefined) {
-            a = compasses.find((compass) => compass.name === aKey)!.chaos;
-          }
-          if (b === undefined) {
-            b = compasses.find((compass) => compass.name === bKey)!.chaos;
-          }
-        } else if (field === "quantity") {
-          if (a === undefined) {
-            a = aValue.placeHolderQuantity;
-          }
-          if (b === undefined) {
-            b = bValue.placeHolderQuantity;
-          }
-        }
-
-        if (a! < b!) {
-          return sortDirection === "asc" ? -1 : 1;
-        } else if (a! > b!) {
-          return sortDirection === "asc" ? 1 : -1;
-        } else {
-          return 0;
-        }
+    const newCompassList = [...compassList];
+    newCompassList.sort((a, b) => {
+      if (a[field] < b[field]) {
+        return newSortDirection === "asc" ? -1 : 1;
       }
-    );
-    setPreviousSortField(field);
+      if (a[field] > b[field]) {
+        return newSortDirection === "asc" ? 1 : -1;
+      }
+      return 0;
+    });
     setSortField(field);
-    setCompassList(Object.fromEntries(sortedCompassList));
+    setPreviousSortField(field);
+    setSortDirection(newSortDirection);
+    setCompassList(newCompassList);
   }
 
-  function updateChaosValue(
+  function updateUserValue(
     e: React.ChangeEvent<HTMLInputElement>,
     name: string
   ) {
-    const compass = compassList[name];
+    const newCompassList = [...compassList];
+    const compass = newCompassList.find((compass) => compass.name === name);
+    if (!compass) return;
     if (e.target.value === "") {
-      compass.price = undefined;
-      if (!compasses) return;
-      if (compass.quantity) {
-        compass.totalValue =
-          compass.quantity *
-          compasses.find((compass) => compass.name === name)!.chaos;
-      } else {
-        compass.totalValue =
-          compass.placeHolderQuantity *
-          compasses.find((compass) => compass.name === name)!.chaos;
-      }
-      setCompassList({ ...compassList });
-      return;
-    }
-    compass.price = Number(e.target.value);
-
-    if (compass.quantity) {
-      compass.totalValue = compass.quantity * compass.price;
+      compass.userValue = undefined;
+      compass.totalValue = compass.value * compass.quantity;
     } else {
-      compass.totalValue = compass.placeHolderQuantity * compass.price;
+      compass.userValue = parseInt(e.target.value);
+      compass.totalValue = compass.userValue * compass.quantity;
     }
-
-    setCompassList({ ...compassList });
+    setCompassList(newCompassList);
   }
 
   useEffect(() => {
-    fetchPrices().then((data) => {
-      if (!data) return;
-      setCompasses(data);
-    });
     fetchStashTabs().then((data) => {
       if (!data) return;
       setStashTabs(data);
     });
   }, []);
 
-  async function fetchPrices(): Promise<Compass[] | undefined> {
+  async function fetchPrices(): Promise<CompassPrice[] | undefined> {
     const res = await fetch("/api/compassPrices", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
-      cache: "force-cache",
+      next: {
+        revalidate: 10,
+      },
     });
     if (!res.ok) {
       console.log("Problem fetching prices.");
@@ -158,7 +113,9 @@ export default function Compass() {
     const res = await fetch("/api/stashTabs", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
-      cache: "force-cache",
+      next: {
+        revalidate: 60,
+      },
     });
     if (!res.ok) {
       console.log("Problem fetching tabs.");
@@ -185,103 +142,120 @@ export default function Compass() {
     setSelectedStashTabs(newSelectedStashTabs);
   }
 
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
   async function fetchStashItems() {
     if (!selectedStashTabs) return;
-    const stashItems: StashTabItems[] = [];
-    const promises = selectedStashTabs.map(async (stashTab) => {
+    const stashItems: StashTabItem[] = [];
+    for (const stashTab of selectedStashTabs) {
+      console.log(`Fetching stash items for ${stashTab.name}`);
+      if (stashTab.type === "MapStash") {
+        console.log("Skipping map stash");
+        continue;
+      }
       const res = await fetch("/api/stashItems", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stashTabId: stashTab.id }),
-        cache: "force-cache",
+        next: {
+          revalidate: 60,
+        },
       });
       if (!res.ok) {
-        console.log("Problem fetching stash items.");
+        if (res.status === 429) {
+          const retryAfter = res.headers.get("Retry-After")!;
+          console.log(`Rate limited by GGG API. Waiting ${retryAfter} seconds`);
+          await delay(parseInt(retryAfter) * 1000);
+          console.log("Done waiting");
+        } else if (res.status === 404) {
+          console.log("Stash tab not found");
+        } else {
+          console.log("Problem fetching stash items.");
+        }
         return;
       }
-      const data = await res.json();
-      stashItems.push(...data);
-      stashItems.forEach((stashItem) => {
-        if (stashItem.enchantMods) {
-          stashItem.name = convertCompassNames(stashItem.enchantMods);
-        } else {
-          stashItem.name = stashItem.typeLine;
+      const rateLimitType = res.headers.get("X-Rate-Limit-Rules")!;
+      const rateLimitRules = res.headers.get(`X-Rate-Limit-${rateLimitType}`)!;
+      const rateLimitState = res.headers.get(
+        `X-Rate-Limit-${rateLimitType}-State`
+      )!;
+      const rules = rateLimitRules
+        .split(",")
+        .map((rule) => rule.split(":").map(Number));
+      const states = rateLimitState
+        .split(",")
+        .map((rule) => rule.split(":").map(Number));
+
+      for (let i = 0; i < rules.length; i++) {
+        const limit = rules[i][0];
+        const interval = rules[i][1];
+        const count = states[i][0];
+        if (limit - count <= 3) {
+          console.log(
+            `Trying to avoid rate limit. Waiting ${interval} seconds. Limit: ${limit}, Count: ${count}`
+          );
+          await delay(interval * 1000);
         }
-      });
-    });
-    await Promise.all(promises);
-
-    const counts: CompassList = stashItems.reduce((acc, curr) => {
-      const key = curr.name;
-
-      if (!acc[key]) {
-        acc[key] = {
-          quantity: 1,
-          totalValue: 0,
-          price: 0,
-          placeHolderQuantity: 0,
-        };
-      } else {
-        acc[key].quantity!++;
       }
 
-      return acc;
-    }, {} as CompassList);
+      const data = await res.json();
+      stashItems.push(...data);
+      const filteredStashItmes = stashItems.filter(
+        (stashItem) => stashItem.typeLine === "Charged Compass"
+      );
+      filteredStashItmes.forEach((stashItem) => {
+        stashItem.name = convertCompassNames(stashItem.enchantMods);
+      });
+    }
 
-    if (!compasses) return;
-    Object.keys(counts).forEach((key) => {
-      const compass = compasses.find((compass) => compass.name === key);
-      if (!compass) return;
-      counts[key].price = compass.chaos;
-      counts[key].totalValue = counts[key].quantity! * compass.chaos;
-      counts[key].placeHolderQuantity = counts[key].quantity!;
-    });
-
-    setCompassList(counts);
+    if (stashItems.length === 0) {
+      return;
+    } else {
+      const counts = stashItems.reduce((acc, stashItem: StashTabItem) => {
+        acc[stashItem.name] = (acc[stashItem.name] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+      const compassList: Compass[] = [];
+      const compassPrices = await fetchPrices();
+      if (!compassPrices) return;
+      Object.entries(counts).forEach(([name, quantity]) => {
+        const compassPrice = compassPrices.find(
+          (compassPrice) => compassPrice.name === name
+        );
+        if (!compassPrice) return;
+        compassList.push({
+          name,
+          quantity,
+          value: compassPrice.chaos,
+          totalValue: compassPrice.chaos * quantity,
+          userQuantity: undefined,
+          userValue: undefined,
+        });
+      });
+      setCompassList(compassList);
+    }
   }
 
   function updateQuantity(
     e: React.ChangeEvent<HTMLInputElement>,
     name: string
   ) {
-    const compass = compassList[name];
+    const newCompassList = [...compassList];
+    const compass = newCompassList.find((compass) => compass.name === name);
+    if (!compass) return;
     if (e.target.value === "") {
-      compass.quantity = undefined;
-      if (!compass.price) {
-        if (compasses) {
-          compass.totalValue =
-            compass.placeHolderQuantity *
-            compasses.find((compass) => compass.name === name)!.chaos;
-        }
-      } else if (compass.price) {
-        compass.totalValue = compass.placeHolderQuantity * compass.price;
-      } else {
-        compass.totalValue = 0;
-      }
-      setCompassList({ ...compassList });
-      return;
-    }
-
-    compass.quantity = Number(e.target.value);
-
-    if (!compass.price) {
-      if (compasses) {
-        compass.totalValue =
-          compass.quantity *
-          compasses.find((compass) => compass.name === name)!.chaos;
-      }
-    } else if (compass.price) {
-      compass.totalValue = compass.quantity * compass.price;
+      compass.userQuantity = undefined;
+      compass.totalValue = compass.value * compass.quantity;
     } else {
-      compass.totalValue = 0;
+      compass.userQuantity = Number(e.target.value);
+      compass.totalValue = compass.value * compass.userQuantity;
     }
 
-    setCompassList({ ...compassList });
+    setCompassList(newCompassList);
   }
 
-  if (!compasses) {
-    return <div>Loading prices...</div>;
-  } else if (!stashTabs) {
+  if (!stashTabs) {
     return <div>Loading tabs...</div>;
   } else if (!compassList) {
     return <div>Loading items...</div>;
@@ -342,16 +316,16 @@ export default function Compass() {
           )}
         </div>
         <div>
-          {Object.keys(compassList).length > 0 && (
-            <table className="w-full table-fixed text-center select-none">
-              <thead>
+          {compassList.length > 0 && (
+            <table className="w-full table-fixed text-center">
+              <thead className="select-none">
                 <tr className="text-rose-700 text-xl">
                   <th
                     className="cursor-pointer"
-                    onClick={() => sortCompassList("key")}
+                    onClick={() => sortCompassList("name")}
                   >
                     Item{" "}
-                    {sortField === "key"
+                    {sortField === "name"
                       ? sortDirection === "asc"
                         ? "↑"
                         : "↓"
@@ -370,10 +344,10 @@ export default function Compass() {
                   </th>
                   <th
                     className="cursor-pointer"
-                    onClick={() => sortCompassList("price")}
+                    onClick={() => sortCompassList("value")}
                   >
                     Price{" "}
-                    {sortField === "price"
+                    {sortField === "value"
                       ? sortDirection === "asc"
                         ? "↑"
                         : "↓"
@@ -394,28 +368,26 @@ export default function Compass() {
               </thead>
               <tbody>
                 {/* {sortCompassList(sortField).map(([key, value]) => ( */}
-                {Object.entries(compassList).map(([key, value]) => (
-                  <tr key={key} className="text-purple-400 font-bold">
-                    <td>{key}</td>
+                {compassList.map((value, index) => (
+                  <tr key={index} className="text-purple-400 font-bold">
+                    <td>{value.name}</td>
                     <td>
                       <input
                         type="number"
-                        value={value.quantity}
-                        placeholder={value.placeHolderQuantity.toString()}
+                        value={value.userQuantity}
+                        placeholder={value.quantity.toString()}
                         className="w-24 py-1 pl-4 border-blue-900 text-center border-x-4 rounded-full bg-black"
-                        onChange={(e) => updateQuantity(e, key)}
+                        onChange={(e) => updateQuantity(e, value.name)}
                         min="0"
                       />
                     </td>
                     <td>
                       <input
                         type="number"
-                        value={value.price}
-                        placeholder={compasses
-                          .find((compass) => compass.name === key)
-                          ?.chaos.toString()}
+                        value={value.userValue}
+                        placeholder={value.value.toString()}
                         className="w-24 py-1 pl-4 border-blue-900 text-center border-x-4 rounded-full bg-black"
-                        onChange={(e) => updateChaosValue(e, key)}
+                        onChange={(e) => updateUserValue(e, value.name)}
                         min="0"
                       />
                     </td>

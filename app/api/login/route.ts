@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 // import { compare } from "bcrypt";
 import { NextResponse } from "next/server";
 import { setUserCookie } from "@/lib/auth";
-import * as z from "zod";
+import { z } from "zod";
 
 const userSchema = z.object({
   username: z.string(),
