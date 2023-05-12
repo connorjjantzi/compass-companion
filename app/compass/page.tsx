@@ -3,37 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import convertCompassNames from "@/lib/convert-compass-names";
 import converStashIcons from "@/lib/convert-stash-icons";
-
-interface CompassPrice {
-  name: string;
-  divine: number;
-  chaos: number;
-}
-
-interface StashTab {
-  id: string;
-  name: string;
-  type: string;
-  index: number;
-  metadata: {
-    colour: string;
-  };
-}
-
-interface StashTabItem {
-  typeLine: string;
-  enchantMods: string[];
-  name: string;
-}
-
-interface Compass {
-  name: string;
-  quantity: number;
-  userQuantity?: number;
-  value: number;
-  userValue?: number;
-  totalValue: number;
-}
+import { StashTab, Compass, CompassPrice, StashTabItem } from "@/lib/types";
 
 type SortField = "name" | "quantity" | "value" | "totalValue";
 type SortDirection = "asc" | "desc";
@@ -364,7 +334,6 @@ export default function Compass() {
                 </tr>
               </thead>
               <tbody>
-                {/* {sortCompassList(sortField).map(([key, value]) => ( */}
                 {compassList.map((value, index) => (
                   <tr key={index} className="text-purple-400 font-bold">
                     <td>{value.name}</td>
