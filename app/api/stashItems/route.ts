@@ -24,7 +24,6 @@ export async function POST(req: Request) {
           Authorization: `Bearer ${process.env.POE_ACCESS_TOKEN}`,
           Host: "api.pathofexile.com",
         },
-        cache: "force-cache",
       }
     );
     if (stashResults.ok) {

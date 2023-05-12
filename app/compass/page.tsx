@@ -97,9 +97,7 @@ export default function Compass() {
     const res = await fetch("/api/compassPrices", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
-      next: {
-        revalidate: 10,
-      },
+      cache: "force-cache",
     });
     if (!res.ok) {
       console.log("Problem fetching prices.");
@@ -113,16 +111,18 @@ export default function Compass() {
     const res = await fetch("/api/stashTabs", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
-      next: {
-        revalidate: 60,
-      },
+      cache: "force-cache",
     });
     if (!res.ok) {
       console.log("Problem fetching tabs.");
       return;
     }
-    const data = await res.json();
-    return data;
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    } else {
+      console.log(res.statusText);
+    }
   }
 
   function updateSelectedStashTabList(
@@ -158,9 +158,6 @@ export default function Compass() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stashTabId: stashTab.id }),
-        next: {
-          revalidate: 60,
-        },
       });
       if (!res.ok) {
         if (res.status === 429) {
