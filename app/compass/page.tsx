@@ -1,50 +1,29 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import convertCompassNames from "@/lib/convert-compass-names";
 import converStashIcons from "@/lib/convert-stash-icons";
-
-interface CompassPrice {
-  name: string;
-  divine: number;
-  chaos: number;
-}
-
-interface StashTab {
-  id: string;
-  name: string;
-  type: string;
-  index: number;
-  metadata: {
-    colour: string;
-  };
-}
-
-interface StashTabItem {
-  typeLine: string;
-  enchantMods: string[];
-  name: string;
-}
-
-interface Compass {
-  name: string;
-  quantity: number;
-  userQuantity?: number;
-  value: number;
-  userValue?: number;
-  totalValue: number;
-}
-
-type SortField = "name" | "quantity" | "value" | "totalValue";
-type SortDirection = "asc" | "desc";
+import {
+  Compass,
+  CompassPrice,
+  StashTab,
+  SortField,
+  SortDirection,
+  StashTabItem,
+} from "@/lib/types";
+import fetchItems from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Compass() {
   const [stashTabs, setStashTabs] = useState<StashTab[] | null>(null);
   const [selectedStashTabs, setSelectedStashTabs] = useState<StashTab[]>([]);
   const [compassList, setCompassList] = useState<Compass[]>([]);
-  const [sortField, setSortField] = useState<SortField>("name");
+  const [sortField, setSortField] = useState<SortField | null>("name");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
-  const [previousSortField, setPreviousSortField] = useState<SortField>("name");
+  const [previousSortField, setPreviousSortField] = useState<SortField | null>(
+    null
+  );
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [originalCompassList, setOriginalCompassList] = useState<Compass[]>([]);
 
   function sortCompassList(field: SortField) {
     let newSortDirection = sortDirection;
@@ -63,8 +42,8 @@ export default function Compass() {
       }
       return 0;
     });
-    setSortField(field);
     setPreviousSortField(field);
+    setSortField(field);
     setSortDirection(newSortDirection);
     setCompassList(newCompassList);
   }
@@ -86,153 +65,28 @@ export default function Compass() {
     setCompassList(newCompassList);
   }
 
-  useEffect(() => {
-    fetchStashTabs().then((data) => {
-      if (!data) return;
-      setStashTabs(data);
-    });
-  }, []);
-
-  async function fetchPrices(): Promise<CompassPrice[] | undefined> {
-    const res = await fetch("/api/compassPrices", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      cache: "force-cache",
-    });
-    if (!res.ok) {
-      console.log("Problem fetching prices.");
-      return;
-    }
-    const data = await res.json();
-    return data.data;
-  }
-
-  async function fetchStashTabs(): Promise<StashTab[] | undefined> {
-    const res = await fetch("/api/stashTabs", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      cache: "force-cache",
-    });
-    if (!res.ok) {
-      console.log("Problem fetching tabs.");
-      return;
-    }
-    if (res.ok) {
-      const data = await res.json();
-      return data;
-    } else {
-      console.log(res.statusText);
-    }
-  }
-
   function updateSelectedStashTabList(
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) {
     if (!stashTabs) return;
     const newSelectedStashTabs = [...selectedStashTabs];
+    const selectedStashTab = stashTabs[index];
     if (e.target.checked) {
-      newSelectedStashTabs.push(stashTabs[index]);
+      newSelectedStashTabs.push(selectedStashTab);
     } else {
-      const removeIndex = newSelectedStashTabs.findIndex(
-        (stashTab) => stashTab.id === stashTabs[index].id
+      newSelectedStashTabs.filter(
+        (stashTab) => stashTab.id !== selectedStashTab?.id
       );
-      newSelectedStashTabs.splice(removeIndex, 1);
     }
     setSelectedStashTabs(newSelectedStashTabs);
   }
-
-  const delay = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-
-  async function fetchStashItems() {
-    if (!selectedStashTabs) return;
-    const stashItems: StashTabItem[] = [];
-    for (const stashTab of selectedStashTabs) {
-      console.log(`Fetching stash items for ${stashTab.name}`);
-      if (stashTab.type === "MapStash") {
-        console.log("Skipping map stash");
-        continue;
-      }
-      const res = await fetch("/api/stashItems", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ stashTabId: stashTab.id }),
-      });
-      if (!res.ok) {
-        if (res.status === 429) {
-          const retryAfter = res.headers.get("Retry-After")!;
-          console.log(`Rate limited by GGG API. Waiting ${retryAfter} seconds`);
-          await delay(parseInt(retryAfter) * 1000);
-          console.log("Done waiting");
-        } else if (res.status === 404) {
-          console.log("Stash tab not found");
-        } else {
-          console.log("Problem fetching stash items.");
-        }
-        return;
-      }
-      const rateLimitType = res.headers.get("X-Rate-Limit-Rules")!;
-      const rateLimitRules = res.headers.get(`X-Rate-Limit-${rateLimitType}`)!;
-      const rateLimitState = res.headers.get(
-        `X-Rate-Limit-${rateLimitType}-State`
-      )!;
-      const rules = rateLimitRules
-        .split(",")
-        .map((rule) => rule.split(":").map(Number));
-      const states = rateLimitState
-        .split(",")
-        .map((rule) => rule.split(":").map(Number));
-
-      for (let i = 0; i < rules.length; i++) {
-        const limit = rules[i][0];
-        const interval = rules[i][1];
-        const count = states[i][0];
-        if (limit - count <= 3) {
-          console.log(
-            `Trying to avoid rate limit. Waiting ${interval} seconds. Limit: ${limit}, Count: ${count}`
-          );
-          await delay(interval * 1000);
-        }
-      }
-
-      const data = await res.json();
-      stashItems.push(...data);
-      const filteredStashItmes = stashItems.filter(
-        (stashItem) => stashItem.typeLine === "Charged Compass"
-      );
-      filteredStashItmes.forEach((stashItem) => {
-        stashItem.name = convertCompassNames(stashItem.enchantMods);
-      });
-    }
-
-    if (stashItems.length === 0) {
-      return;
-    } else {
-      const counts = stashItems.reduce((acc, stashItem: StashTabItem) => {
-        acc[stashItem.name] = (acc[stashItem.name] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
-      const compassList: Compass[] = [];
-      const compassPrices = await fetchPrices();
-      if (!compassPrices) return;
-      Object.entries(counts).forEach(([name, quantity]) => {
-        const compassPrice = compassPrices.find(
-          (compassPrice) => compassPrice.name === name
-        );
-        if (!compassPrice) return;
-        compassList.push({
-          name,
-          quantity,
-          value: compassPrice.chaos,
-          totalValue: compassPrice.chaos * quantity,
-          userQuantity: undefined,
-          userValue: undefined,
-        });
-      });
-      setCompassList(compassList);
-    }
-  }
+  useEffect(() => {
+    fetchStashTabs().then((data) => {
+      if (!data) return;
+      setStashTabs(data);
+    });
+  }, []);
 
   function updateQuantity(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -252,10 +106,43 @@ export default function Compass() {
     setCompassList(newCompassList);
   }
 
+  async function fetchStashTabs(): Promise<StashTab[] | undefined> {
+    const res = await fetch("/api/stashTabs", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      cache: "force-cache",
+    });
+    if (!res.ok) {
+      console.log("Problem fetching tabs.");
+      return;
+    }
+    const data = await res.json();
+    return data;
+  }
+
+  const handleFetchItems = async () => {
+    const promises = selectedStashTabs.map((tab) => fetchItems(tab));
+    const results = await Promise.all(promises);
+    const flattenedResults = results.flat();
+    setOriginalCompassList(flattenedResults);
+    setCompassList(flattenedResults);
+  };
+
+  function handleSearchTermChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearchTerm(e.target.value);
+  }
+
+  useEffect(() => {
+    if (originalCompassList.length > 0) {
+      const filteredCompassList = originalCompassList.filter((compass) =>
+        compass.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setCompassList(filteredCompassList);
+    }
+  }, [searchTerm]);
+
   if (!stashTabs) {
     return <div>Loading tabs...</div>;
-  } else if (!compassList) {
-    return <div>Loading items...</div>;
   } else {
     return (
       <div>
@@ -282,8 +169,9 @@ export default function Compass() {
                   <Image
                     src={converStashIcons(stashTab.type)}
                     alt="Stash Icon"
-                    width={20}
-                    height={20}
+                    width={28}
+                    height={28}
+                    className="w-auto h-auto"
                   />
                 ) : null}
                 <p>Name: {stashTab.name}</p>
@@ -306,13 +194,20 @@ export default function Compass() {
             <button
               type="button"
               className="rounded-full px-2 py-1 bg-slate-600"
-              onClick={fetchStashItems}
+              onClick={handleFetchItems}
             >
               Fetch Tabs
             </button>
           )}
         </div>
-        <div>
+        <input
+          type="text"
+          placeholder="Search by item name"
+          value={searchTerm}
+          onChange={handleSearchTermChange}
+          className="text-white rounded-full px-2 py-1 bg-slate-600 ml-2"
+        />
+        <div className="rounder-md border">
           {compassList.length > 0 && (
             <table className="w-full table-fixed text-center">
               <thead className="select-none">
@@ -371,7 +266,11 @@ export default function Compass() {
                     <td>
                       <input
                         type="number"
-                        value={value.userQuantity}
+                        value={
+                          value.userQuantity !== undefined
+                            ? value.userQuantity
+                            : ""
+                        }
                         placeholder={value.quantity.toString()}
                         className="w-24 py-1 pl-4 border-blue-900 text-center border-x-4 rounded-full bg-black"
                         onChange={(e) => updateQuantity(e, value.name)}
@@ -381,7 +280,9 @@ export default function Compass() {
                     <td>
                       <input
                         type="number"
-                        value={value.userValue}
+                        value={
+                          value.userValue !== undefined ? value.userValue : ""
+                        }
                         placeholder={value.value.toString()}
                         className="w-24 py-1 pl-4 border-blue-900 text-center border-x-4 rounded-full bg-black"
                         onChange={(e) => updateUserValue(e, value.name)}
