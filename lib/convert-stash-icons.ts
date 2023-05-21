@@ -1,4 +1,4 @@
-export default function converStashIcons(name: string) {
+export default function convertStashIcons(name: string) {
   //links to stash tab images
   const images: { [key: string]: string } = {
     MapStash:

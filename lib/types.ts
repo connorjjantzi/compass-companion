@@ -2,6 +2,7 @@ export type CompassPrice = {
   name: string;
   divine: number;
   chaos: number;
+  userValue?: number;
 };
 
 export type StashTab = {
@@ -12,6 +13,7 @@ export type StashTab = {
   metadata: {
     colour: string;
   };
+  selected: boolean;
 };
 
 export type StashTabItem = {
@@ -27,6 +29,9 @@ export type Compass = {
   value: number;
   userValue?: number;
   totalValue: number;
+  selected: boolean;
+  orderQuantity?: number;
+  orderTotalValue?: number;
 };
 
 export type SortField = "name" | "quantity" | "value" | "totalValue";

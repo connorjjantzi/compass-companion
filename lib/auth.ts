@@ -3,9 +3,10 @@ import { nanoid } from "nanoid";
 import { SignJWT, jwtVerify } from "jose";
 import { USER_TOKEN, getJwtSecretKey } from "./constants";
 
-interface UserJwtPayload {
+export interface UserJwtPayload {
   jti: string;
   iat: number;
+  user_id?: string;
 }
 
 export class AuthError extends Error {}
@@ -37,12 +38,12 @@ export async function setUserCookie(res: NextResponse, userId: string) {
     .setProtectedHeader({ alg: "HS256" })
     .setJti(nanoid())
     .setIssuedAt()
-    .setExpirationTime("2h")
+    .setExpirationTime("24h")
     .sign(new TextEncoder().encode(getJwtSecretKey()));
 
   res.cookies.set(USER_TOKEN, token, {
     httpOnly: true,
-    maxAge: 60 * 60 * 2, // 2 hours in seconds
+    maxAge: 60 * 60 * 24, // 2 hours in seconds
     path: "/",
     secure: process.env.NODE_ENV === "production",
   });

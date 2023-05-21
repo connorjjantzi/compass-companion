@@ -2,13 +2,13 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
-        <h1 className="text-7xl font-bold mb-4">Welcome</h1>
+        <h1 className="mb-4 text-7xl font-bold">Welcome</h1>
         <p>
           <Link
             href="/login"
-            className="text-white font-bold text-6xl bg-blue-500 rounded px-4 py-2"
+            className="rounded bg-blue-500 px-4 py-2 text-6xl font-bold text-white"
             as={`/login`}
           >
             Login

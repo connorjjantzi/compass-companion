@@ -12,21 +12,21 @@ datasource db {
 }
 
 model User {
-  id          String    @id @default(cuid())
-  username    String    @unique
-  password    String
-  accessToken String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  compasses   Compass[]
+  id        String    @id @default(cuid())
+  username  String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  compasses Compass[] @relation("UserCompasses")
 }
 
 model Compass {
-  id     String  @id @default(cuid())
+  id     String @id @default(cuid())
   name   String
-  user   User    @relation(fields: [userId], references: [id])
+  user   User   @relation("UserCompasses", fields: [userId], references: [id])
   userId String
-  price  Decimal @db.Decimal(4, 2)
+  value  Int
 
-  @@index([userId])
+  @@unique([userId, name], name: "unique_compass_name_per_user")
+  @@index([userId], name: "userId")
 }

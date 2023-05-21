@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -28,8 +30,8 @@ export default function LoginForm() {
   return (
     <>
       <form onSubmit={onSubmit}>
-        <input
-          className="block w-full px-4 py-2 mb-4 border border-gray-300 rounded text-black"
+        <Input
+          className="mb-4 block w-full rounded border border-gray-300 px-4 py-2 text-white"
           type="text"
           name="username"
           placeholder="Username"
@@ -37,8 +39,8 @@ export default function LoginForm() {
           onChange={(e) => setUsername(e.target.value)}
           autoComplete="username"
         />
-        <input
-          className="block w-full px-4 py-2 mb-4 border border-gray-300 rounded text-black"
+        <Input
+          className="mb-4 block w-full rounded border border-gray-300 px-4 py-2 text-white"
           type="password"
           name="password"
           placeholder="Password"
@@ -46,14 +48,14 @@ export default function LoginForm() {
           autoComplete="current-password"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button
-          className="w-full px-4 py-2 text-white bg-blue-500 rounded"
+        <Button
+          className="w-full rounded bg-blue-500 px-4 py-2 text-white"
           type="submit"
         >
           Login
-        </button>
+        </Button>
       </form>
-      {error && <p className="text-red-500 mt-2 absolute">{error}</p>}
+      {error && <p className="absolute mt-2 text-red-500">{error}</p>}
     </>
   );
 }

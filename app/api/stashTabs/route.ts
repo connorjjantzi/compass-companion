@@ -10,7 +10,7 @@ export async function GET() {
           Authorization: `Bearer ${process.env.POE_ACCESS_TOKEN}`,
           Host: "api.pathofexile.com",
         },
-        cache: "force-cache",
+        cache: "no-store",
       }
     );
     const stashJson = await stashResults.json();
