@@ -240,7 +240,6 @@ export default function Compass() {
       });
       return accumulator;
     }, []);
-    console.log(reducedResults);
     setOriginalCompassList(reducedResults);
     const sortedCompassList = sortCompassList(
       "totalValue",
@@ -443,21 +442,6 @@ export default function Compass() {
                           <div id="order-total">{compass.orderTotalValue}</div>
                         </div>
                       )}
-                      {compass.orderTotalValue &&
-                        compass.orderTotalValue > divinePrice && (
-                          <div className="flex flex-col items-center gap-2">
-                            <Label htmlFor="order-change">Change</Label>
-                            <div id="order-change">
-                              {(
-                                (Math.ceil(
-                                  compass.orderTotalValue / divinePrice
-                                ) -
-                                  compass.orderTotalValue / divinePrice) *
-                                divinePrice
-                              ).toFixed(0)}
-                            </div>
-                          </div>
-                        )}
                     </div>
                   ))}
                 <div>
