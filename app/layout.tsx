@@ -1,10 +1,12 @@
 import "@/styles/globals.css";
 import { Inter as FontSans } from "next/font/google";
-import Providers from "@/utils/provider";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
-import { Toast } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
+import { TRPCReactProvider } from "@/trpc/react";
+import { cookies } from "next/headers";
+import { ThemeProvider } from "@/components/theme-provider";
+import { type Viewport } from "next";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -19,6 +21,10 @@ const fontHeading = localFont({
 export const metadata = {
   title: "Compass Companion",
   description: "Tool to help with compasses trading in Path of Exile",
+  icons: [{ rel: "icon", url: "/favicon.ico" }],
+};
+
+export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
@@ -37,10 +43,14 @@ export default function RootLayout({
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable,
-          fontHeading.variable
+          fontHeading.variable,
         )}
       >
-        <Providers>{children}</Providers>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <TRPCReactProvider cookies={cookies().toString()}>
+            {children}
+          </TRPCReactProvider>
+        </ThemeProvider>
         <Toaster />
       </body>
     </html>
