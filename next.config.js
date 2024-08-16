@@ -1,8 +1,17 @@
+await import("./env.js");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["web.poecdn.com"],
+    remotePatterns: [
+      {
+        hostname: "web.poecdn.com",
+      },
+      {
+        hostname: "lh3.googleusercontent.com",
+      },
+    ],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

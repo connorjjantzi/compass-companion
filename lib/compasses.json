@@ -1,0 +1,195 @@
+{
+  "20% increased Pack Size in your Unidentified Maps 4 uses remaining": "Unidentified Map",
+  "25% increased Pack Size in your Unidentified Maps 16 uses remaining": "25% Unidentified Map",
+
+  "25% increased Magic Pack Size 4 uses remaining": "Magic Pack Size",
+  "30% increased Magic Pack Size 16 uses remaining": "30% Magic Pack Size",
+
+  "Players and Monsters take 12% increased Chaos Damage Your Maps contain 6 additional packs of Monsters that deal Chaos Damage 4 uses remaining": "Chaos Monsters",
+  "Players and Monsters take 14% increased Chaos Damage Your Maps contain 8 additional packs of Monsters that deal Chaos Damage 16 uses remaining": "8 Packs Chaos Monsters",
+
+  "Players and Monsters take 12% increased Cold Damage Your Maps contain 6 additional packs of Monsters that deal Cold Damage 4 uses remaining": "Cold Monsters",
+  "Players and Monsters take 14% increased Cold Damage Your Maps contain 8 additional packs of Monsters that deal Cold Damage 16 uses remaining": "8 Packs Cold Monsters",
+
+  "Players and Monsters take 12% increased Fire Damage Your Maps contain 6 additional packs of Monsters that deal Fire Damage 4 uses remaining": "Fire Monsters",
+  "Players and Monsters take 14% increased Fire Damage Your Maps contain 8 additional packs of Monsters that deal Fire Damage 16 uses remaining": "8 Packs Fire Monsters",
+
+  "Players and Monsters take 12% increased Lightning Damage Your Maps contain 6 additional packs of Monsters that deal Lightning Damage 4 uses remaining": "Lightning Monsters",
+  "Players and Monsters take 14% increased Lightning Damage Your Maps contain 8 additional packs of Monsters that deal Lightning Damage 16 uses remaining": "8 Packs Lightning Monsters",
+
+  "Players and Monsters take 12% increased Physical Damage Your Maps contain 6 additional packs of Monsters that deal Physical Damage 4 uses remaining": "Physical Monsters",
+  "Players and Monsters take 14% increased Physical Damage Your Maps contain 8 additional packs of Monsters that deal Physical Damage 16 uses remaining": "8 Packs Physical Monsters",
+
+  "Your Magic Maps contain 4 additional packs of Magic Monsters Your Normal Maps contain 4 additional packs of Normal Monsters Your Rare Maps contain 4 additional Rare Monster packs 4 uses remaining": "Rare Map Rare Packs",
+  "Your Magic Maps contain 5 additional packs of Magic Monsters Your Normal Maps contain 5 additional packs of Normal Monsters Your Rare Maps contain 5 additional Rare Monster packs 16 uses remaining": "Rare Map 5 Rare Packs",
+
+  "Your Maps contain 6 additional packs of Monsters that Convert when Killed 4 uses remaining": "Convert Monsters",
+  "Your Maps contain 8 additional packs of Monsters that Convert when Killed 16 uses remaining": "8 Packs Convert Monsters",
+
+  "Player's Life and Mana Recovery from Flasks are instant Your Maps contain 6 additional packs of Monsters that Heal 4 uses remaining": "Flasks Instant",
+  "Player's Life and Mana Recovery from Flasks are instant Your Maps contain 8 additional packs of Monsters that Heal 16 uses remaining": "Flasks Instant 8 Packs",
+
+  "Players and their Minions cannot take Reflected Damage Your Maps contain 4 additional Packs with Mirrored Rare Monsters 4 uses remaining": "Reflected",
+  "Players and their Minions cannot take Reflected Damage Your Maps contain 5 additional Packs with Mirrored Rare Monsters 16 uses remaining": "Reflected 5 Packs",
+
+  "Players' Vaal Skills do not apply Soul Gain Prevention Your Maps contain 6 additional packs of Corrupted Vaal Monsters 4 uses remaining": "Soul Gain Prevention",
+  "Players' Vaal Skills do not apply Soul Gain Prevention Your Maps contain 8 additional packs of Corrupted Vaal Monsters 16 uses remaining": "Soul Gain Prevention 8 Packs",
+
+  "Players gain an additional Vaal Soul on Kill Your Maps contain 6 additional packs of Corrupted Vaal Monsters 4 uses remaining": "Vaal Soul on Kill",
+  "Players gain an additional Vaal Soul on Kill Your Maps contain 8 additional packs of Corrupted Vaal Monsters 16 uses remaining": "Vaal Soul on Kill 8 Packs",
+
+  "Your Maps contain Alva 4 uses remaining": "Alva",
+  "Your Maps contain Alva 16 uses remaining": "Alva 16 uses",
+
+  "Your Maps contain Niko 4 uses remaining": "Niko",
+  "Your Maps contain Niko 16 uses remaining": "Niko 16 uses",
+
+  "Your Maps contain Jun 4 uses remaining": "Jun",
+  "Your Maps contain Jun 16 uses remaining": "Jun 16 uses",
+
+  "Your Maps contain Einhar 4 uses remaining": "Einhar",
+  "Your Maps contain Einhar 16 uses remaining": "Einhar 16 uses",
+
+  "Your Maps contain an additional Legion Encounter 4 uses remaining": "Legion",
+  "Your Maps contain an additional Legion Encounter 16 uses remaining": "Legion 16 uses",
+
+  "Area contains a Smuggler's Cache 4 uses remaining": "Smuggler's Cache",
+  "Area contains a Smuggler's Cache 16 uses remaining": "Smuggler's Cache 16 uses",
+
+  "Your Maps contain an Ultimatum Encounter 4 uses remaining": "Ultimatum",
+  "Your Maps contain an Ultimatum Encounter 16 uses remaining": "Ultimatum 16 uses",
+
+  "Monsters Imprisoned by Essences have a 50% chance to contain a Remnant of Corruption Your Maps contain an additional Essence 4 uses remaining": "Essence",
+  "Monsters imprisoned by essences have a 50% chance to contain a remnant of corruption your maps contain 2 additional essences 16 uses remaining": "2 Essences",
+
+  "Your Maps contain an additional Abyss Your Maps can contain Abysses 4 uses remaining": "Abyss",
+  "Your maps contain 2 additional abysses your maps can contain abysses 16 uses remaining": "2 Abysses",
+
+  "Your Maps contain a Mirror of Delirium 4 uses remaining": "Mirror of Delirium",
+  "Your Maps contain a Mirror of Delirium 16 uses remaining": "Mirror of Delirium 16 uses",
+
+  "Delirium Reward Bars fill 100% faster in your Maps 4 uses remaining": "Delirium Reward",
+  "Delirium Reward Bars fill 100% faster in your Maps 16 uses remaining": "Delirium Reward 16 uses",
+
+  "Your Maps contain Ritual Altars 4 uses remaining": "Ritual Altars",
+  "Your Maps contain Ritual Altars 16 uses remaining": "Ritual Altars 16 uses",
+
+  "Rerolling Favours at Ritual Altars in your Maps has no Cost the first 1 time 4 uses remaining": "Ritual Rerolling",
+  "Rerolling Favours at Ritual Altars in your Maps has no Cost the first 1 time 16 uses remaining": "Ritual Rerolling 16 uses",
+
+  "Your Maps contain a Blight Encounter 4 uses remaining": "Blight",
+  "Your Maps contain a Blight Encounter 16 uses remaining": "Blight 16 uses",
+
+  "Oils found in your Maps are 1 tier higher Cost of Building and Upgrading Blight Towers in your Maps is doubled 4 uses remaining": "Oils Tier",
+  "Oils found in your Maps are 1 tier higher Cost of Building and Upgrading Blight Towers in your Maps is doubled 16 uses remaining": "Oils Tier 16 uses",
+
+  "Your Maps can contain Breaches Your Maps contain an additional Breach 4 uses remaining": "Breach",
+  "Your maps can contain breaches your maps contain 2 additional breaches 16 uses remaining": "2 Breaches",
+
+  "Breaches in your Maps belong to Chayula Breaches in your Maps contain 3 additional Clasped Hands 4 uses remaining": "Chayula",
+  "Breaches in your Maps belong to Chayula Breaches in your Maps contain 3 additional Clasped Hands 16 uses remaining": "Chayula 16 uses",
+
+  "Breaches in your Maps belong to Esh Breaches in your Maps contain 3 additional Clasped Hands 4 uses remaining": "Esh",
+  "Breaches in your Maps belong to Esh Breaches in your Maps contain 3 additional Clasped Hands 16 uses remaining": "Esh 16 uses",
+
+  "Breaches in your Maps belong to Tul Breaches in your Maps contain 3 additional Clasped Hands 4 uses remaining": "Tul",
+  "Breaches in your Maps belong to Tul Breaches in your Maps contain 3 additional Clasped Hands 16 uses remaining": "Tul 16 uses",
+
+  "Breaches in your Maps belong to Uul-Netol Breaches in your Maps contain 3 additional Clasped Hands 4 uses remaining": "Uul-Netol",
+  "Breaches in your Maps belong to Uul-Netol Breaches in your Maps contain 3 additional Clasped Hands 16 uses remaining": "Uul-Netol 16 uses",
+
+  "Breaches in your Maps belong to Xoph Breaches in your Maps contain 3 additional Clasped Hands 4 uses remaining": "Xoph",
+  "Breaches in your Maps belong to Xoph Breaches in your Maps contain 3 additional Clasped Hands 16 uses remaining": "Xoph 16 uses",
+
+  "Your Maps contain an additional Gloom Shrine 50% increased Duration of Shrine Effects on Players in your Maps 4 uses remaining": "Gloom Shrine",
+  "Your maps contain an additional shrine your maps contain an additional gloom shrine 50% increased duration of shrine effects on players in your maps 16 uses remaining": "Gloom Shrine +1 Shrine",
+
+  "Your Maps contain an additional Resonating Shrine 50% increased Duration of Shrine Effects on Players in your Maps 4 uses remaining": "Resonating Shrine",
+  "Your maps contain an additional shrine your maps contain an additional resonating shrine 50% increased duration of shrine effects on players in your maps 16 uses remaining": "Resonating Shrine +1 Shrine",
+
+  "Your Maps contain The Sacred Grove 4 uses remaining": "Sacred Grove",
+  "Your Maps contain The Sacred Grove 16 uses remaining 16 uses remaining": "Sacred Grove 16 uses",
+
+  "Lifeforce dropped by Harvest Monsters in your Maps is Duplicated Harvest Monsters in your Maps have 100% more Life Harvests in your Maps contain at least one Crop of Blue Plants 4 uses remaining": "Blue Plants",
+  "Lifeforce dropped by Harvest Monsters in your Maps is Duplicated Harvest Monsters in your Maps have 100% more Life Harvests in your Maps contain at least one Crop of Blue Plants 16 uses remaining": "Blue Plants 16 uses",
+
+  "Lifeforce dropped by Harvest Monsters in your Maps is Duplicated Harvest Monsters in your Maps have 100% more Life Harvests in your Maps contain at least one Crop of Purple Plants 4 uses remaining": "Purple Plants",
+  "Lifeforce dropped by Harvest Monsters in your Maps is Duplicated Harvest Monsters in your Maps have 100% more Life Harvests in your Maps contain at least one Crop of Purple Plants 16 uses remaining": "Purple Plants 16 uses",
+
+  "Lifeforce dropped by Harvest Monsters in your Maps is Duplicated Harvest Monsters in your Maps have 100% more Life Harvests in your Maps contain at least one Crop of Yellow Plants 4 uses remaining": "Yellow Plants",
+  "Lifeforce dropped by Harvest Monsters in your Maps is Duplicated Harvest Monsters in your Maps have 100% more Life Harvests in your Maps contain at least one Crop of Yellow Plants 16 uses remaining": "Yellow Plants 16 uses",
+
+  "Slaying Enemies close together can attract monsters from Beyond this realm 25% increased Beyond Demon Pack Size in your Maps 4 uses remaining": "Beyond",
+  "Slaying Enemies close together can attract monsters from Beyond this realm 35% increased Beyond Demon Pack Size in your Maps 16 uses remaining": "35% Beyond",
+
+  "an additional Conqueror Map drops on completing your maps (tier 14+) Map Bosses have 200% more Life Map Bosses deal 100% more Damage 4 uses remaining": "Conqueror Map",
+  "an additional Conqueror Map drops on completing your maps (tier 14+) Map Bosses have 200% more Life Map Bosses deal 100% more Damage 16 uses remaining": "Conqueror Map 16 uses",
+
+  "an additional elder guardian map drops on completing your maps (tier 14+) map bosses have 200% more life map bosses deal 100% more damage 4 uses remaining": "Elder Guardian",
+  "an additional elder guardian map drops on completing your maps (tier 14+) map bosses have 200% more life map bosses deal 100% more damage 16 uses remaining": "Elder Guardian 16 uses",
+
+  "an additional shaper guardian map drops on completing your maps (tier 14+) map bosses have 200% more life map bosses deal 100% more damage 4 uses remaining": "Shaper Guardian",
+  "an additional shaper guardian map drops on completing your maps (tier 14+) map bosses have 200% more life map bosses deal 100% more damage 16 uses remaining": "Shaper Guardian 16 uses",
+
+  "Map Bosses are accompanied by a mysterious Harbinger Map Bosses drop additional Currency Shards Harbingers in your Maps drop additional Currency Shards 4 uses remaining": "Mysterious Harbinger",
+  "Map Bosses are accompanied by a mysterious Harbinger Map Bosses drop additional Currency Shards Harbingers in your Maps drop additional Currency Shards 16 uses remaining": "Mysterious Harbinger 16 uses",
+
+  "Create a copy of Beasts Captured in your Maps 4 uses remaining": "Copy of Beasts",
+  "Create a copy of Beasts Captured in your Maps 16 uses remaining": "Copy of Beasts 16 uses",
+
+  "Your Maps contain 100% increased number of Runic Monster Markers 4 uses remaining": "Runic Monster Markers",
+  "Your Maps contain 100% increased number of Runic Monster Markers 16 uses remaining": "Runic Monster Markers 16 uses",
+
+  "Your Maps contain hunted traitors 4 uses remaining": "Hunted Traitors",
+  "Your Maps contain hunted traitors 16 uses remaining": "Hunted Traitors 16 uses",
+
+  "Legion Monsters in your Maps have 100% more Life Splinters and Emblems dropped by Legion Monsters in your Maps are duplicated 4 uses remaining": "Splinters Emblems Duplicate",
+  "Legion Monsters in your Maps have 100% more Life Splinters and Emblems dropped by Legion Monsters in your Maps are duplicated 16 uses remaining": "Splinters Emblems Duplicate 16 uses",
+
+  "Your Maps contain 2 additional Strongboxes Strongboxes in your Maps are Corrupted Strongboxes in your Maps are at least Rare 4 uses remaining": "Strongbox Corrupted",
+  "Your Maps contain 3 additional Strongboxes Strongboxes in your Maps are Corrupted Strongboxes in your Maps are at least Rare 16 uses remaining": "3 Strongboxes Corrupted",
+
+  "Strongbox Monsters are Enraged Strongbox Monsters have 500% increased Item Quantity Your Maps contain an additional Strongbox 4 uses remaining": "Strongbox Enraged",
+  "Strongbox Monsters are Enraged Strongbox Monsters have 600% increased Item Quantity Your Maps contain an additional Strongbox 16 uses remaining": "Strongbox Enraged 600%",
+
+  "Maps found in your Maps are Corrupted with 8 Modifiers 4 uses remaining": "8 Modifiers",
+  "Maps found in your Maps are Corrupted with 8 Modifiers 16 uses remaining": "8 Modifiers 16 uses",
+
+  "The First 3 Possessed Monsters drop an additional Rusted Scarab Your Maps contain an additional Tormented Betrayer 4 uses remaining": "Rusted Scarab",
+  "The First 3 Possessed Monsters drop an additional Polished Scarab Your Maps contain an additional Tormented Betrayer 4 uses remaining": "Polished Scarab",
+  "The First 3 Possessed Monsters drop an additional Gilded Scarab Your Maps contain an additional Tormented Betrayer 4 uses remaining": "Gilded Scarab",
+  "The first 3 possessed monsters drop an additional Winged scarab Your Maps contain an additional Tormented Betrayer 16 uses remaining": "Winged Scarab",
+
+  "100% increased Intelligence gained from Immortal Syndicate targets encountered in your Maps 4 uses remaining": "Syndicate Intelligence",
+  "100% increased Intelligence gained from Immortal Syndicate targets encountered in your Maps 16 uses remaining": "Syndicate Intelligence 16 uses",
+
+  "Non-Unique Heist Contracts found in your Maps have an additional Implicit Modifier 4 uses remaining": "Contracts Implicit",
+  "Non-Unique Heist Contracts found in your Maps have an additional Implicit Modifier 16 uses remaining": "Contracts Implicit 16 uses",
+
+  "Your Maps contain 25 additional Clusters of Mysterious Barrels 4 uses remaining": "Mysterious Barrels",
+  "Your Maps contain 35 additional Clusters of Mysterious Barrels 16 uses remaining": "35 Mysterious Barrels",
+
+  "The First 3 Possessed Monsters drop an additional Unique Item Your Maps contain an additional Tormented Graverobber 4 uses remaining": "Tormented Graverobber",
+
+  "The First 3 Possessed Monsters drop an additional Map Your Maps contain an additional Tormented Heretic 4 uses remaining": "Tormented Heretic",
+  "The First 3 Possessed Monsters drop an additional Map Your Maps contain an additional Tormented Heretic 16 uses remaining": "Tormented Heretic 16 uses",
+
+  "Map Bosses are accompanied by Bodyguards An additional Map drops on Completing your Maps 4 uses remaining": "Bodyguards",
+  "Map bosses are accompanied by bodyguards 2 additional maps drop on completing your maps 16 uses remaining": "Bodyguards 2 Maps Drop",
+
+  "Map Bosses of your Corrupted Maps drop 2 additional Vaal Items Items found in your Maps have 5% chance to be Corrupted 4 uses remaining": "Boss Drop Vaal",
+  "Map Bosses of your Corrupted Maps drop 3 additional Vaal Items Items found in your Maps have 5% chance to be Corrupted 16 uses remaining": "Boss Drop 3 Vaal",
+
+  "Your Maps contain 6 additional packs of Corrupted Vaal Monsters Your Maps have a 50% chance to contain Gifts of the Sacrificed per Sacrifice Fragment used Your Maps have a 50% chance to contain Gifts of the Red Queen per Mortal Fragment used 4 uses remaining": "Mortal/Sacrifice Fragment",
+  "Your maps contain 8 additional packs of corrupted vaal monsters your maps have a 50% chance to contain gifts of the sacrificed per sacrifice fragment used your maps have a 50% chance to contain gifts of the red queen per mortal fragment used 16 uses remaining": "Mortal/Sacrifice Fragment 8 Packs",
+
+  "Unique Monsters drop Corrupted Items 4 uses remaining": "Unique Monsters Drop Corrupted",
+  "Unique Monsters drop Corrupted Items 16 uses remaining": "Unique Monsters Drop Corrupted 16 uses",
+
+  "Rogue Exiles deal 20% increased Damage Rogue Exiles drop 2 additional Jewels Rogue Exiles in your Maps have 20% increased Life Your Maps are inhabited by 2 additional Rogue Exiles 4 uses remaining": "Rogue Exiles",
+  "Map Bosses drop 1 additional Unique Item 4 uses remaining": "Boss Drop Unique",
+  "Your maps are inhabited by an additional invasion boss 4 uses remaining": "Invasion Boss",
+  "Your Maps are Alluring 4 uses remaining": "Alluring",
+  "Map Bosses deal 20% increased Damage Your Maps have 20% Quality 4 uses remaining": "Map 20% Quality",
+  "Map Bosses have 20% increased Life Quality bonus of your Maps also applies to Rarity of Items found 4 uses remaining": "Map Quality to Rarity"
+}
